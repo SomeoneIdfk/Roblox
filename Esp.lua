@@ -697,7 +697,7 @@ function EspInterface.getTeam(player)
 end
 
 function EspInterface.getWeapon(player)
-	local player = game.Players[player.name]
+	local player = game.Players[player.Name]
 	return espLib.getTeam(player) and espLib.getCharacter(player) and player.Character:FindFirstChild("EquippedTool") and player.Character.EquippedTool.Value or nil;
 end
 
