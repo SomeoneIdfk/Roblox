@@ -670,9 +670,11 @@ function EspInterface.Load()
 			player.CharacterAdded:Connect(function(character)
 				repeat
 					wait()
-				until character and character:FindFirstChild("HumanoidRootPart")
-				createObject(player)
-				character.Humanoid.Died:Connect(removeObject, player)
+				until character and character:FindFirstChild("HumanoidRootPart") or not game.Players[player.Name]
+				if game.Players[player.Name] then
+					createObject(player)
+					character.Humanoid.Died:Connect(removeObject, player)
+				end
 			end)
 
 			local character = EspInterface.getCharacter(player)
@@ -687,9 +689,11 @@ function EspInterface.Load()
 		player.CharacterAdded:Connect(function(character)
 			repeat
 				wait()
-			until character and character:FindFirstChild("HumanoidRootPart")
-			createObject(player)
-			character.Humanoid.Died:Connect(removeObject, player)
+			until character and character:FindFirstChild("HumanoidRootPart") or not game.Players[player.Name]
+			if game.Players[player.Name] then
+				createObject(player)
+				character.Humanoid.Died:Connect(removeObject, player)
+			end
 		end)
 	end);
 	EspInterface.playerRemoving = players.PlayerRemoving:Connect(removeObject);
