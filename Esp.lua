@@ -718,22 +718,18 @@ end
 
 -- game specific functions
 function EspInterface.getTeam(player)
-	player = game.Players[player.Name]
  	return player and player:FindFirstChild("Status") and player.Status:FindFirstChild("Team") and player.Status.Team.Value ~= "Spectator" and player.Status.Team.Value or nil;
 end
 
 function EspInterface.getWeapon(player)
-	player = game.Players[player.Name]
-	return player and EspInterface.getTeam(player) and EspInterface.getCharacter(player) and player.Character:FindFirstChild("EquippedTool") and player.Character.EquippedTool.Value or nil;
+	return player and EspInterface.getCharacter(player) and player.Character:FindFirstChild("EquippedTool") and player.Character.EquippedTool.Value or nil;
 end
 
 function EspInterface.isFriendly(player)
-	player = game.Players[player.Name]
-	return player and player:FindFirstChild("Status") and player.Status.Team.Value == LocalPlayer.Status.Team.Value or true;
+	return player and player:FindFirstChild("Status") and player.Status.Team.Value == LocalPlayer.Status.Team.Value or false;
 end
 
 function EspInterface.getCharacter(player)
-	player = game.Players[player.Name]
 	return player and EspInterface.getTeam(player) and player.Character or nil;
 end
 
