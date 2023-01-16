@@ -227,9 +227,9 @@ function EspObject:Update()
 	self.enabled = self.options.enabled and self.character and not
 		(#interface.whitelist > 0 and not interface.whitelist[self.player]);
 
-	local humanoid = self.enabled and findFirstChild(self.character, "HumanoidRootPart");
-	if humanoid and self.health > 0 then
-		local _, onScreen, depth = worldToScreen(humanoid.Position);
+	local head = self.enabled and findFirstChild(self.character, "Head");
+	if head and self.health > 0 then
+		local _, onScreen, depth = worldToScreen(head.Position);
 		self.onScreen = onScreen;
 		self.distance = depth;
 
@@ -257,7 +257,7 @@ function EspObject:Update()
 		elseif self.options.offScreenArrow then
 			local _, yaw, roll = toOrientation(camera.CFrame);
 			local flatCFrame = CFrame.Angles(0, yaw, roll) + camera.CFrame.Position;
-			local objectSpace = pointToObjectSpace(flatCFrame, humanoid.Position);
+			local objectSpace = pointToObjectSpace(flatCFrame, head.Position);
 			local angle = atan2(objectSpace.Z, objectSpace.X);
 
 			self.direction = Vector2.new(cos(angle), sin(angle));
@@ -667,11 +667,41 @@ function EspInterface.Load()
 
 	for _, player in next, players:GetPlayers() do
 		if player ~= localPlayer then
-			createObject(player);
+			player.CharacterAdded:Connect(function(character)
+				repeat
+					wait()
+				until character and character:FindFirstChild(HumanoidRootPart)
+				createObject(player)
+				local dead = false
+				repeat
+					wait()
+					local health = EspInterface.getHealth(character)
+					if not (health > 0) then
+						dead = true
+					end
+				until dead
+				removeObject(player)
+			end)
 		end
 	end
 
-	EspInterface.playerAdded = players.PlayerAdded:Connect(createObject);
+	EspInterface.playerAdded = players.PlayerAdded:Connect(function(player)
+		player.CharacterAdded:Connect(function(character)
+			repeat
+				wait()
+			until character and character:FindFirstChild(HumanoidRootPart)
+			createObject(player)
+			local dead = false
+			repeat
+				wait()
+				local health = EspInterface.getHealth(character)
+				if not (health > 0) then
+					dead = true
+				end
+			until dead
+			removeObject(player)
+		end)
+	end);
 	EspInterface.playerRemoving = players.PlayerRemoving:Connect(removeObject);
 	EspInterface._hasLoaded = true;
 end
@@ -692,17 +722,17 @@ end
 
 -- game specific functions
 function EspInterface.getTeam(player)
-	local player = game.Players[player.Name]
+	player = game.Players[player.Name]
  	return player:FindFirstChild("Status") and player.Status:FindFirstChild("Team") and player.Status.Team.Value ~= "Spectator" and player.Status.Team.Value or nil;
 end
 
 function EspInterface.getWeapon(player)
-	local player = game.Players[player.Name]
+	player = game.Players[player.Name]
 	return EspInterface.getTeam(player) and EspInterface.getCharacter(player) and player.Character:FindFirstChild("EquippedTool") and player.Character.EquippedTool.Value or nil;
 end
 
 function EspInterface.isFriendly(player)
-	local player = game.Players[player.Name]
+	player = game.Players[player.Name]
 	return player and player:FindFirstChild("Status") and player.Status.Team.Value == LocalPlayer.Status.Team.Value or true;
 end
 
