@@ -700,6 +700,7 @@ function EspInterface.getWeapon(player)
 end
 
 function EspInterface.isFriendly(player)
+	local player = game.Players[player.Name]
 	return player and player:FindFirstChild("Status") and player.Status.Team.Value == LocalPlayer.Status.Team.Value or true;
 end
 
