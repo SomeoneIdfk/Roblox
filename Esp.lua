@@ -670,7 +670,7 @@ function EspInterface.Load()
 			player.CharacterAdded:Connect(function(character)
 				repeat
 					wait()
-				until character and character:FindFirstChild(HumanoidRootPart)
+				until character and character:FindFirstChild("HumanoidRootPart")
 				createObject(player)
 				local dead = false
 				repeat
@@ -689,7 +689,7 @@ function EspInterface.Load()
 		player.CharacterAdded:Connect(function(character)
 			repeat
 				wait()
-			until character and character:FindFirstChild(HumanoidRootPart)
+			until character and character:FindFirstChild("HumanoidRootPart")
 			createObject(player)
 			local dead = false
 			repeat
