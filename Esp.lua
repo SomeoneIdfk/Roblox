@@ -227,9 +227,9 @@ function EspObject:Update()
 	self.enabled = self.options.enabled and self.character and not
 		(#interface.whitelist > 0 and not interface.whitelist[self.player]);
 
-	local head = self.enabled and findFirstChild(self.character, "Head");
-	if head then
-		local _, onScreen, depth = worldToScreen(head.Position);
+	local humanoid = self.enabled and findFirstChild(self.character, "Humanoid");
+	if humanoid and self.health > 0 then
+		local _, onScreen, depth = worldToScreen(humanoid.Position);
 		self.onScreen = onScreen;
 		self.distance = depth;
 
@@ -257,7 +257,7 @@ function EspObject:Update()
 		elseif self.options.offScreenArrow then
 			local _, yaw, roll = toOrientation(camera.CFrame);
 			local flatCFrame = CFrame.Angles(0, yaw, roll) + camera.CFrame.Position;
-			local objectSpace = pointToObjectSpace(flatCFrame, head.Position);
+			local objectSpace = pointToObjectSpace(flatCFrame, humanoid.Position);
 			local angle = atan2(objectSpace.Z, objectSpace.X);
 
 			self.direction = Vector2.new(cos(angle), sin(angle));
@@ -692,11 +692,13 @@ end
 
 -- game specific functions
 function EspInterface.getTeam(player)
+	local player = game.Players[player.Name]
  	return player:FindFirstChild("Status") and player.Status:FindFirstChild("Team") and player.Status.Team.Value ~= "Spectator" and player.Status.Team.Value or nil;
 end
 
 function EspInterface.getWeapon(player)
-	return EspInterface.getTeam(player) and player.Character:FindFirstChild("EquippedTool") and player.Character.EquippedTool.Value or nil;
+	local player = game.Players[player.name]
+	return espLib.getTeam(player) and espLib.getCharacter(player) and player.Character:FindFirstChild("EquippedTool") and player.Character.EquippedTool.Value or nil;
 end
 
 function EspInterface.isFriendly(player)
