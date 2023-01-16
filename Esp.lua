@@ -675,8 +675,10 @@ function EspInterface.Load()
 				character.Humanoid.Died:Connect(removeObject, player)
 			end)
 
-			if EspInterface.getCharacter(player) then
-				
+			local character = EspInterface.getCharacter(player)
+			if character then
+				createObject(player)
+				character.Humanoid.Died:Connect(removeObject, player)
 			end
 		end
 	end
