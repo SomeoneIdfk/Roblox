@@ -227,7 +227,7 @@ function EspObject:Update()
 	self.enabled = self.options.enabled and self.character and not
 		(#interface.whitelist > 0 and not interface.whitelist[self.player]);
 
-	local humanoid = self.enabled and findFirstChild(self.character, "Humanoid");
+	local humanoid = self.enabled and findFirstChild(self.character, "HumanoidRootPart");
 	if humanoid and self.health > 0 then
 		local _, onScreen, depth = worldToScreen(humanoid.Position);
 		self.onScreen = onScreen;
