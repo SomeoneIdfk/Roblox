@@ -668,6 +668,7 @@ function EspInterface.Load()
 	for _, player in next, players:GetPlayers() do
 		if player ~= localPlayer then
 			player.CharacterAdded:Connect(function(character)
+				removeObject(player)
 				repeat
 					wait()
 				until character and character:FindFirstChild("Humanoid") or not game.Players:FindFirstChild(player.Name)
@@ -687,6 +688,7 @@ function EspInterface.Load()
 
 	EspInterface.playerAdded = players.PlayerAdded:Connect(function(player)
 		player.CharacterAdded:Connect(function(character)
+			removeObject(player)
 			repeat
 				wait()
 			until character and character:FindFirstChild("Humanoid") or not game.Players:FindFirstChild(player.Name)
