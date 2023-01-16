@@ -672,16 +672,12 @@ function EspInterface.Load()
 					wait()
 				until character and character:FindFirstChild("HumanoidRootPart")
 				createObject(player)
-				local dead = false
-				repeat
-					wait()
-					local health = EspInterface.getHealth(character)
-					if not (health > 0) then
-						dead = true
-					end
-				until dead
-				removeObject(player)
+				character.Humanoid.Died:Connect(removeObject, player)
 			end)
+
+			if EspInterface.getCharacter(player) then
+				
+			end
 		end
 	end
 
@@ -691,15 +687,7 @@ function EspInterface.Load()
 				wait()
 			until character and character:FindFirstChild("HumanoidRootPart")
 			createObject(player)
-			local dead = false
-			repeat
-				wait()
-				local health = EspInterface.getHealth(character)
-				if not (health > 0) then
-					dead = true
-				end
-			until dead
-			removeObject(player)
+			character.Humanoid.Died:Connect(removeObject, player)
 		end)
 	end);
 	EspInterface.playerRemoving = players.PlayerRemoving:Connect(removeObject);
@@ -723,12 +711,12 @@ end
 -- game specific functions
 function EspInterface.getTeam(player)
 	player = game.Players[player.Name]
- 	return player:FindFirstChild("Status") and player.Status:FindFirstChild("Team") and player.Status.Team.Value ~= "Spectator" and player.Status.Team.Value or nil;
+ 	return player and player:FindFirstChild("Status") and player.Status:FindFirstChild("Team") and player.Status.Team.Value ~= "Spectator" and player.Status.Team.Value or nil;
 end
 
 function EspInterface.getWeapon(player)
 	player = game.Players[player.Name]
-	return EspInterface.getTeam(player) and EspInterface.getCharacter(player) and player.Character:FindFirstChild("EquippedTool") and player.Character.EquippedTool.Value or nil;
+	return player and EspInterface.getTeam(player) and EspInterface.getCharacter(player) and player.Character:FindFirstChild("EquippedTool") and player.Character.EquippedTool.Value or nil;
 end
 
 function EspInterface.isFriendly(player)
@@ -737,7 +725,8 @@ function EspInterface.isFriendly(player)
 end
 
 function EspInterface.getCharacter(player)
-	return EspInterface.getTeam(player) and player.Character or nil;
+	player = game.Players[player.Name]
+	return player and EspInterface.getTeam(player) and player.Character or nil;
 end
 
 function EspInterface.getHealth(character)
