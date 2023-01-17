@@ -225,7 +225,7 @@ function EspObject:Update()
 	self.health, self.maxHealth = interface.getHealth(self.character);
 	self.weapon = interface.getWeapon(self.player);
 	self.enabled = self.options.enabled and self.character and not
-		(#interface.whitelist > 0 and not interface.whitelist[self.player]);
+		(#interface.whitelist > 0 and not (interface.whitelist[self.player] == true));
 
 	local head = self.enabled and findFirstChild(self.character, "Head");
 	if head and self.health > 0 then
