@@ -224,10 +224,9 @@ function EspObject:Update()
 	self.character = interface.getCharacter(self.player);
 	self.health, self.maxHealth = interface.getHealth(self.character);
 	self.weapon = interface.getWeapon(self.player);
-	self.enabled = self.options.enabled and self.character and not
-		(#interface.whitelist > 0 and not (interface.whitelist[self.player] == true));
+	self.enabled = self.options.enabled and self.character;
 
-	local head = self.enabled and findFirstChild(self.character, "Head");
+	local head = self.enabled and not interface.whitelist[self.player] and findFirstChild(self.character, "Head");
 	if head and self.health > 0 then
 		local _, onScreen, depth = worldToScreen(head.Position);
 		self.onScreen = onScreen;
@@ -444,9 +443,9 @@ function ChamObject:Update()
 	local interface = self.interface;
 	local character = interface.getCharacter(self.player);
 	local options = interface.teamSettings[interface.isFriendly(self.player) and "friendly" or "enemy"];
-	local enabled = options.enabled and character and not (#interface.whitelist > 0 and not (interface.whitelist[self.player] == true));
+	local enabled = options.enabled and character;
 
-	highlight.Enabled = enabled and options.chams;
+	highlight.Enabled = enabled and not interface.whitelist[self.player] and options.chams;
 	if highlight.Enabled then
 		highlight.DepthMode = options.chamsVisibleOnly and Enum.HighlightDepthMode.Occluded or Enum.HighlightDepthMode.AlwaysOnTop;
 		highlight.Adornee = character;
