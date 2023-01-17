@@ -444,7 +444,7 @@ function ChamObject:Update()
 	local interface = self.interface;
 	local character = interface.getCharacter(self.player);
 	local options = interface.teamSettings[interface.isFriendly(self.player) and "friendly" or "enemy"];
-	local enabled = options.enabled and character and not (#interface.whitelist > 0 and not interface.whitelist[self.player]);
+	local enabled = options.enabled and character and not (#interface.whitelist > 0 and not (interface.whitelist[self.player] == true));
 
 	highlight.Enabled = enabled and options.chams;
 	if highlight.Enabled then
