@@ -670,17 +670,23 @@ function EspInterface.Load()
 				removeObject(player)
 				repeat
 					wait()
-				until character and character:FindFirstChild("Humanoid") or not game.Players:FindFirstChild(player.Name)
+				until not game.Players:FindFirstChild(player.Name) or character and character:FindFirstChild("Humanoid")
 				if game.Players:FindFirstChild(player.Name) then
 					createObject(player)
-					character.Humanoid.Died:Connect(removeObject, player)
+					repeat
+						wait()
+					until not game.Players:FindFirstChild(player.Name) or not (EspInterface.getHealth(character) > 0)
+					removeObject(player)
 				end
 			end)
 
 			local character = EspInterface.getCharacter(player)
-			if character then
+			if character and EspInterface.getHealth(character) > 0 then
 				createObject(player)
-				character.Humanoid.Died:Connect(removeObject, player)
+				repeat
+					wait()
+				until not game.Players:FindFirstChild(player.Name) or not (EspInterface.getHealth(character) > 0)
+				removeObject(player)
 			end
 		end
 	end
@@ -693,7 +699,10 @@ function EspInterface.Load()
 			until character and character:FindFirstChild("Humanoid") or not game.Players:FindFirstChild(player.Name)
 			if game.Players:FindFirstChild(player.Name) then
 				createObject(player)
-				character.Humanoid.Died:Connect(removeObject, player)
+				repeat
+					wait()
+				until not game.Players:FindFirstChild(player.Name) or not (EspInterface.getHealth(character) > 0)
+				removeObject(player)
 			end
 		end)
 	end);
