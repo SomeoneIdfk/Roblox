@@ -682,11 +682,13 @@ function EspInterface.Load()
 
 			local character = EspInterface.getCharacter(player)
 			if character and EspInterface.getHealth(character) > 0 then
-				createObject(player)
-				repeat
-					wait()
-				until not game.Players:FindFirstChild(player.Name) or not (EspInterface.getHealth(character) > 0)
-				removeObject(player)
+				coroutine.wrap(function()
+					createObject(player)
+					repeat
+						wait()
+					until not game.Players:FindFirstChild(player.Name) or not (EspInterface.getHealth(character) > 0)
+					removeObject(player)
+				end)()
 			end
 		end
 	end
